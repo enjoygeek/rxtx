@@ -89,6 +89,8 @@ public final class LibraryLoader {
     private static final String OS_WINDOWS = "windows";
     private static final String ARCH_X86 = "x86";
     private static final String ARCH_X86_64 = "x86_64";
+    private static final String ARCH_ARMEL = "armel";
+    private static final String ARCH_ARMHF = "armhf";
     private static final Logger LOGGER =
             Logger.getLogger(LibraryLoader.class.getName());
     private final ClassLoader classLoader;
@@ -353,6 +355,16 @@ public final class LibraryLoader {
         } else if ("x86_64".equals(osArch)
                 || "amd64".equals(osArch)) {
             return ARCH_X86_64;
+        } else if ("armel".equals(osArch)
+                || "arm".equals(osArch)) {
+            /*
+             * On ARM/Linux environment os.arch does not contain ABI info.
+             * thus, user should set "armhf" or "armel" explicitly to os.arch
+             * system property. We use armel in default.
+             */
+            return ARCH_ARMEL;
+        } else if ("armhf".equals(osArch)) {
+            return ARCH_ARMHF;
         } else {
             LOGGER.log(Level.INFO,
                     "The os.arch value {0} is unknown. Please file a bug.",
